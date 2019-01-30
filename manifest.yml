@@ -1,0 +1,7 @@
+---
+applications:
+- name: cf_service_bench
+  memory: 128M
+  instances: 1
+  buildpack: staticfile_buildpack
+  path: app/
