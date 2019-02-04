@@ -1,7 +1,17 @@
 ---
 applications:
-- name: cf_service_bench
+# - name: cf_service_bench_backend
+#   memory: 128M
+#   instances: 1
+#   buildpack: staticfile_buildpack
+#   path: backend/
+#   services:
+#     - redis-demo2
+- name: cf_service_bench_api
   memory: 128M
   instances: 1
-  buildpack: staticfile_buildpack
-  path: app/
+  buildpack: python_buildpack
+  path: api/
+  services:
+    - redis-demo2
+    - benchmark-redis-storage
