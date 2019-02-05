@@ -16,6 +16,7 @@ class Config():
         self.compatible_services = ['redis', 'mysql', 'mariadb']
         self.scenario = os.environ.get('SCENARIO', False)
         self.services_to_bench = self._remove_redis_storage_from_services()
+        self.redis_key_prefix = '_redis_bench.'
 
     def _check_redis_storage(self):
         try:
