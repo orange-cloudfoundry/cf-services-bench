@@ -4,6 +4,7 @@ import time
 from .lib.config import Config
 from .lib.tasks import bench
 from .lib.model import RedisWrapper
+from .lib.results import get_last_result_as_json
 from flask import Flask, jsonify, make_response
 import sys
 
@@ -24,8 +25,7 @@ def main(config, serve=True):
 
     @app.route("/results", methods=["GET"])
     def results():
-        redis_conn = RedisWrapper(config.get_redis_storage_uri())
-        return jsonify(redis_conn.get_last_result(config.redis_key_prefix))
+        return(make_response(get_last_result_as_json(config), 200))
 
     app.run(host="0.0.0.0", port=8080)
 
