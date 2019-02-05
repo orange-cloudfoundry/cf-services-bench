@@ -7,3 +7,11 @@ class NoServicesFound(Exception):
 
 class MissingService(Exception):
     """"""
+
+
+class MissingEnvironmentVariable(Exception):
+    """"""
+
+
+class IncorrectConfiguration(Exception):
+    """"""

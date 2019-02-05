@@ -1,8 +1,10 @@
 # -*- encoding: utf-8; -*-
+from copy import deepcopy
 import json
 import os
 
-from .errors import NoServicesFound, MissingService
+from .errors import (NoServicesFound, MissingService,
+                     MissingEnvironmentVariable, IncorrectConfiguration)
 
 
 class Config():
@@ -12,6 +14,8 @@ class Config():
         else:
             self.services = False
         self.compatible_services = ['redis', 'mysql', 'mariadb']
+        self.scenario = os.environ.get('SCENARIO', False)
+        self.services_to_bench = self._remove_redis_storage_from_services()
 
     def _check_redis_storage(self):
         try:
@@ -21,8 +25,8 @@ class Config():
         except KeyError:
             return False
 
-    def _check_services_to_bench(self):
-        services = self.services
+    def _remove_redis_storage_from_services(self):
+        services = deepcopy(self.services)
         for index, service in enumerate(services['redis']):
             if service['name'].startswith('benchmark-redis-storage'):
                 # removing benchmark-redis-storage
@@ -30,16 +34,21 @@ class Config():
         if not services['redis']:
             # if redis service is empty, remove key
             services.pop('redis')
+        return services
 
+    def _check_services_to_bench(self):
         for service in self.compatible_services:
-            try:
-                services[service]
-            except KeyError:
+            if not self.services_to_bench.get(service, False):
                 continue
             return True
         return False
 
     def check_config(self):
+        if not self.scenario:
+            raise MissingEnvironmentVariable('SCENARIO is not defined')
+        if self.scenario not in ['nominal', 'benchmark']:
+            raise IncorrectConfiguration(
+                'Scenario should be either nominal or benchmark')
         if not self.services:
             raise NoServicesFound('No services are bound to this application')
         # check benchmark-redis-storage exists

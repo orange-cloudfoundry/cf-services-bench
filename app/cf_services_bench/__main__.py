@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8; -*-
 from .lib.config import Config
-from .lib.tasks import ma_tache
+from .lib.tasks import bench
 from flask import Flask, jsonify, make_response
 import sys
 
 
-def main(serve=True):
+def main(config, serve=True):
     """ Main function """
     app = Flask("cf_services_bench_api")
 
     @app.route("/run", methods=["GET"])
     def run_bench():
-        ma_tache.apply_async()
+        for service in config.services_to_bench:
+            if service in config.compatible_services:
+                for service_instance in config.services_to_bench[service]:
+                    bench.delay(service, service_instance, config.scenario)
         return make_response('OK', 200)
 
     @app.route("/results", methods=["GET"])
@@ -25,4 +28,4 @@ def main(serve=True):
 if __name__ == "__main__":
     config = Config()
     config.check_config()
-    sys.exit(main())
+    sys.exit(main(config))
