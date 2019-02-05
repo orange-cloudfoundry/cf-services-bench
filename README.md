@@ -1,6 +1,13 @@
 cf_services_bench
 ===
 
+# TODO : 
+generate on the fly : 
+* .cfignore  
+* manifest.yml
+* Procfile
+ to avoid code duplication
+
 # Summary
 
 CF application to run bench scenarios on external services. Each service provides 2 scenarios, nominal & benchmark.  
@@ -27,7 +34,7 @@ cf create-service redis plan benchmark-redis-storage
 ### summary
 
 API exposes 2 routes :
-* /run/<test> : will add an entry in redis queue to start benchmarks. `test` will be nominal or benchmark
+* /run : will add an entry in redis queue to start benchmarks. 
 * /results : returns JSON object containing benchmarks results
 * /metrics (`to be implemented`) : returns results in prometheus format
 
