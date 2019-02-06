@@ -15,3 +15,7 @@ class MissingEnvironmentVariable(Exception):
 
 class IncorrectConfiguration(Exception):
     """"""
+
+
+class NotImplementedTest(Exception):
+    """"""
