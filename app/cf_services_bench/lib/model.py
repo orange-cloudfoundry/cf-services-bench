@@ -2,9 +2,16 @@
 
 import redis
 import json
+import time
 
 
 class RedisWrapper():
+    """Redis wrapper to store results
+
+    Returns:
+        [type] -- [description]
+    """
+
     def __init__(self, redis_uri):
         self.conn = redis.from_url(redis_uri)
 
@@ -15,6 +22,16 @@ class RedisWrapper():
         return self.conn.get(key)
 
     def get_last_result(self, key_prefix):
+        """Get all keys matching key_prefix pattern and returns last one
+        alphabetically ordered
+
+        Arguments:
+            key_prefix {[str]} -- [key_prefix]
+
+        Returns:
+            [str] -- [last key alphabetically ordered]
+        """
+
         pattern = '{}*'.format(key_prefix)
         keys = self.conn.keys(pattern)
         keys.sort()

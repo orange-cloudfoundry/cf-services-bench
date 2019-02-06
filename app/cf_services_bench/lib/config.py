@@ -8,7 +8,23 @@ from .errors import (NoServicesFound, MissingService,
 
 
 class Config():
+    """Check and stores configuration needed
+
+    Raises:
+        MissingEnvironmentVariable -- [description]
+        IncorrectConfiguration -- [description]
+        NoServicesFound -- [description]
+        MissingService -- [description]
+        MissingService -- [description]
+
+    Returns:
+        [type] -- [description]
+    """
+
     def __init__(self):
+        """[summary]
+        """
+
         if os.environ.get('VCAP_SERVICES', False):
             self.services = json.loads(os.environ['VCAP_SERVICES'])
         else:
@@ -19,6 +35,13 @@ class Config():
         self.redis_key_prefix = '_redis_bench.'
 
     def _check_redis_storage(self):
+        """checks that a redis service with name starting with 
+        benchmark-redis-storage exists
+
+        Returns:
+            [bool] -- [True or False depending on service existance]
+        """
+
         try:
             for service in self.services['redis']:
                 if service['name'].startswith('benchmark-redis-storage'):
@@ -27,6 +50,13 @@ class Config():
             return False
 
     def _remove_redis_storage_from_services(self):
+        """[summary]
+
+        Returns:
+            [dict] -- [returns a dict containing services excluding 
+            benchmark-redis-storage]
+        """
+
         services = deepcopy(self.services)
         for index, service in enumerate(services['redis']):
             if service['name'].startswith('benchmark-redis-storage'):
@@ -38,6 +68,12 @@ class Config():
         return services
 
     def _check_services_to_bench(self):
+        """checks existance of services to bench
+
+        Returns:
+            [bool] -- [description]
+        """
+
         for service in self.compatible_services:
             if not self.services_to_bench.get(service, False):
                 continue
@@ -45,6 +81,16 @@ class Config():
         return False
 
     def check_config(self):
+        """checks that programm has a proper configuration
+
+        Raises:
+            MissingEnvironmentVariable -- [description]
+            IncorrectConfiguration -- [description]
+            NoServicesFound -- [description]
+            MissingService -- [description]
+            MissingService -- [description]
+        """
+
         if not self.scenario:
             raise MissingEnvironmentVariable('SCENARIO is not defined')
         if self.scenario not in ['nominal', 'benchmark']:
@@ -60,6 +106,12 @@ class Config():
             raise MissingService('no services to bench, exiting')
 
     def get_redis_storage_uri(self):
+        """extracts uri from benchmark-redis-storage
+
+        Returns:
+            [str] -- returns uri or False
+        """
+
         try:
             for service in self.services['redis']:
                 if service['name'].startswith('benchmark-redis-storage'):
