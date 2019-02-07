@@ -13,7 +13,7 @@ from .lib.tasks import bench
 
 def main(config, serve=True):
     """ Main function """
-    app = Flask("cf_services_bench_api")
+    app = Flask("cf_services_bench")
 
     @app.route("/run", methods=["GET"])
     def run_bench():
