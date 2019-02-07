@@ -22,7 +22,7 @@ Currently implemented scenarios :
 
 ## pre-requisites
 
-* This application first needs a redis service in order to store result and queue awaiting benchmarks. This service name should start with `benchmark-redis-storage`
+* This application first needs a redis service in order to store result and queue awaiting benchmarks. This service name should **start with** `benchmark-redis-storage`
 
     ```bash
     cf create-service redis plan benchmark-redis-storage
@@ -31,30 +31,31 @@ Currently implemented scenarios :
 * You need to have **pip3** installed to download vendor packages
 * You need to be logged in your org/space and ready to **cf push**
 
+## configuration
+
+* Open **deploy_on_cf.sh**
+* Fill `APP_REDIS_STORAGE` with redis service you previously created
+* Fill `APP_SERVICES_TO_BENCH` variable with services you wish to bench. If you want to bench multiple services, separate them with a space
+* run `./deploy_on_cf.sh`
+
 # Usage
-
-## API
-
-### summary
 
 API exposes 2 routes :
 
-* /run : will add an entry in redis queue to start benchmarks. 
+* /run : will add an entry in redis queue to start benchmarks.
 * /results : returns JSON object containing benchmarks results
 * /metrics (`to be implemented`) : returns results in prometheus format
 
-### configuration
+Just curl `api_url`/run to start benchmarks, results will appear on `api_url`/results as soon as they are available.
 
-API needs to be binded to `benchmark-redis-storage`, otherwise it will fail.  
-API will look for external services and will dynamically configure itself, if it doesn't find any external services in addition to `benchmark-redis-storage`, it will fail.
+If you run a new bench, it will create new results, and so on.
 
-## Worker
+# Architecture
 
-### summary
+## API
 
-backend reads the queue and runs benchmarks
+API uses Flask & Celery to provide API and queuing
 
-### configuration
+## worker
 
-Worker needs to be binded to `benchmark-redis-storage`, otherwise it will fail.  
-Worker will look for external services and will dynamically configure itself, if it doesn't find any external services in addition to `benchmark-redis-storage`, it will fail.
+Worker uses Celery to run tasks
