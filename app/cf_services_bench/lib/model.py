@@ -1,8 +1,9 @@
 # -*- encoding: utf-8; -*-
 
-import redis
 import json
 import time
+
+import redis
 
 
 class RedisWrapper:
