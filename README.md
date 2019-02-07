@@ -22,12 +22,12 @@ Currently implemented scenarios :
 
 ## pre-requisites
 
-* This application first needs a redis service in order to store result and queue awaiting benchmarks. This service name should **start with** `benchmark-redis-storage`
+* This application first needs a redis service in order to store result and queue awaiting benchmarks. This service name **MUST starts with** `benchmark-redis-storage`
 
     ```bash
     cf create-service redis plan benchmark-redis-storage
     ```
-* Other services you will bind to your application will be benched, be careful as bench may resul in data loss
+* Other services you will bind your application to will be benched, be careful as bench may resul in data loss
 * You need to have **pip3** installed to download vendor packages
 * You need to be logged in your org/space and ready to **cf push**
 
