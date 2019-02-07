@@ -1,6 +1,6 @@
 # -*- encoding: utf-8; -*-
 import json
-import time
+import pendulum
 
 from .model import RedisWrapper
 
@@ -25,7 +25,7 @@ def upsert_result(
         "service": service,
         "service_instance": service_instance_name,
         "scenario": scenario,
-        "date": time.strftime("%a, %d %b %Y %H:%M:%S"),
+        "date": pendulum.now().to_datetime_string(),
         "result": result,
     }
     redis_conn = RedisWrapper(config.get_redis_storage_uri())
