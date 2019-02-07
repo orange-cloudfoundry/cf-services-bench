@@ -1,7 +1,0 @@
-name: cf_service_bench_worker
-memory: 128M
-instances: 1
-buildpack: python_buildpack
-path: app/
-env:
-  SCENARIO: nominal
