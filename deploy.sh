@@ -42,6 +42,8 @@ buildpack: python_buildpack
 path: app/
 env:
   SCENARIO: nominal
+  LD_LIBRARY_PATH: /home/vcap/app/lib/
+  LUA_PATH: /home/vcap/app/lib/oltp_common.lua
 EOF
 
 echo 'Deploying worker'
