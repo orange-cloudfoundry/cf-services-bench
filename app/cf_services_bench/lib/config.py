@@ -32,7 +32,7 @@ class Config:
         if os.environ.get("VCAP_SERVICES", False):
             self.services = json.loads(os.environ["VCAP_SERVICES"])
         else:
-            self.services = False
+            raise NoServicesFound("No services are bound to this application")
         self.compatible_services = ["redis", "mysql", "mariadb"]
         self.scenario = os.environ.get("SCENARIO", False)
         self.services_to_bench = self._remove_redis_storage_from_services()
