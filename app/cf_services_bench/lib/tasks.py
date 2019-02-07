@@ -1,15 +1,18 @@
 # -*- encoding: utf-8; -*-
+import json
 import os
+
 from celery import Celery
+
+from ..bench.mysql import BenchMysql
+from ..bench.redis import BenchRedis
 from .config import Config
 from .model import RedisWrapper
 from .results import upsert_result
-from ..bench.redis import BenchRedis
-import json
 
 config = Config()
 redis_uri = config.get_redis_storage_uri()
-celery = Celery('tasks', broker=redis_uri)
+celery = Celery("tasks", broker=redis_uri)
 
 
 @celery.task
@@ -26,13 +29,17 @@ def bench(service, service_instance, scenario, token):
         [None] -- [description]
     """
 
-    if service == 'redis':
-        bench = BenchRedis(service_instance['credentials']['uri'], scenario)
-    elif service in ['mariadb', 'mysql']:
-        upsert_result(config, service, service_instance['name'], scenario,
-                      token, {'error': 'not implemented'})
-        return False
+    if service == "redis":
+        bench = BenchRedis(service_instance["credentials"]["uri"], scenario)
+    elif service in ["mariadb", "mysql"]:
+        bench = BenchMysql(service_instance["credentials"]["uri"], scenario)
 
     bench.run_bench()
-    upsert_result(config, service,
-                  service_instance['name'], scenario, token, bench.results)
+    upsert_result(
+        config,
+        service,
+        service_instance["name"],
+        scenario,
+        token,
+        bench.results,
+    )

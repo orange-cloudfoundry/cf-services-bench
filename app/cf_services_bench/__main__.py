@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8; -*-
+import sys
 import time
+
+from flask import Flask, jsonify, make_response
+
 from .lib.config import Config
-from .lib.tasks import bench
 from .lib.model import RedisWrapper
 from .lib.results import get_last_result_as_json
-from flask import Flask, jsonify, make_response
-import sys
+from .lib.tasks import bench
 
 
 def main(config, serve=True):
@@ -19,13 +21,14 @@ def main(config, serve=True):
         for service in config.services_to_bench:
             if service in config.compatible_services:
                 for service_instance in config.services_to_bench[service]:
-                    bench.delay(service, service_instance,
-                                config.scenario, timestamp)
-        return make_response('OK', 200)
+                    bench.delay(
+                        service, service_instance, config.scenario, timestamp
+                    )
+        return make_response("OK", 200)
 
     @app.route("/results", methods=["GET"])
     def results():
-        return(make_response(get_last_result_as_json(config), 200))
+        return make_response(get_last_result_as_json(config), 200)
 
     app.run(host="0.0.0.0", port=8080)
 

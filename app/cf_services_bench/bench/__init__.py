@@ -2,7 +2,7 @@
 import sh
 
 
-class Bench():
+class Bench:
     def __init__(self, scenario):
         """initialises properties needed for your bench
         self.cmd should contain a sh.Command object refering a command, for
@@ -11,7 +11,7 @@ class Bench():
         command
         """
 
-        self.cmd = sh.Command('')
+        self.cmd = sh.Command("")
         self.options = []
         self.raw_result = None
         self.results = {}
@@ -39,4 +39,4 @@ class Bench():
             self._format_results()
         except sh.ErrorReturnCode as output:
             self.raw_result = str(output.stderr)
-            self.results['error'] = self.raw_result
+            self.results["error"] = self.raw_result

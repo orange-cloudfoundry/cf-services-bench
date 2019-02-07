@@ -1,11 +1,13 @@
 # -*- encoding: utf-8; -*-
 import json
 import time
+
 from .model import RedisWrapper
 
 
-def upsert_result(config, service, service_instance_name, scenario, token,
-                  result):
+def upsert_result(
+    config, service, service_instance_name, scenario, token, result
+):
     """Stores results in redis. Check if result previously exists and update
     it if so
 
@@ -19,17 +21,19 @@ def upsert_result(config, service, service_instance_name, scenario, token,
         result {[str or dict]} -- result that will be stored in redis
     """
 
-    session_result = {'service': service,
-                      'service_instance': service_instance_name,
-                      'scenario': scenario,
-                      'date': time.strftime("%a, %d %b %Y %H:%M:%S"),
-                      'result': result}
+    session_result = {
+        "service": service,
+        "service_instance": service_instance_name,
+        "scenario": scenario,
+        "date": time.strftime("%a, %d %b %Y %H:%M:%S"),
+        "result": result,
+    }
     redis_conn = RedisWrapper(config.get_redis_storage_uri())
-    key = '{}{}'.format(config.redis_key_prefix, token)
+    key = "{}{}".format(config.redis_key_prefix, token)
 
     previous_result = redis_conn.get(key)
     if previous_result:
-        result = json.loads(previous_result.decode('utf-8'))
+        result = json.loads(previous_result.decode("utf-8"))
         result.append(session_result)
     else:
         result = [session_result]
