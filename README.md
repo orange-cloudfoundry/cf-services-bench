@@ -16,7 +16,7 @@ Currently implemented scenarios :
 * mysql : nominal
 * redis : nominal
 
-:warning: Please be advised that benchmarks need their own database, don't use a production database, it will result in dataloss. :warning: 
+:warning: Please be advised that benchmarks need their own database, don't use a production database, it will result in dataloss. :warning:
 
 # Installation
 
