@@ -13,9 +13,9 @@ APP_REDIS_STORAGE=benchmark-redis-storage
 APP_SERVICES_TO_BENCH="benchmark-mariadb-dfy redis-demo2"
 SEPARATOR=#######################################
 
-# echo $SEPARATOR
-# echo 'downloading packages'
-# # pip3 download -d app/vendor -r app/requirements.txt
+echo $SEPARATOR
+echo 'downloading packages'
+pip3 download -d app/vendor -r app/requirements.txt
 
 echo $SEPARATOR
 echo 'Setting Python version'
