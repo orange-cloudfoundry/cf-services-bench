@@ -5,7 +5,7 @@ import json
 import time
 
 
-class RedisWrapper():
+class RedisWrapper:
     """Redis wrapper to store results
 
     Returns:
@@ -15,7 +15,7 @@ class RedisWrapper():
     def __init__(self, redis_uri):
         self.conn = redis.from_url(redis_uri)
 
-    def set_kv(self, key, value, ttl=2000):
+    def set_kv(self, key, value, ttl=604800):
         self.conn.set(key, value, ex=ttl)
 
     def get(self, key):
@@ -32,7 +32,7 @@ class RedisWrapper():
             [str] -- [last key alphabetically ordered]
         """
 
-        pattern = '{}*'.format(key_prefix)
+        pattern = "{}*".format(key_prefix)
         keys = self.conn.keys(pattern)
         keys.sort()
         result = self.get(keys[-1])
