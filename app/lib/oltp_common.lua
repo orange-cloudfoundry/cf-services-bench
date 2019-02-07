@@ -519,3 +519,4 @@ function check_reconnect()
       end
    end
 end
+sysbench.hooks.report_cumulative = sysbench.report_json
