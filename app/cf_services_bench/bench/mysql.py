@@ -53,10 +53,10 @@ class BenchMysql(Bench):
 
         if scenario == "nominal":
             if not os.environ.get("LOCAL", False):
-                self.options.append("/home/vcap/app/lib/oltp_insert.lua")
+                self.options.append("/home/vcap/app/lib/oltp_read_write.lua")
             else:
                 self.options.append(
-                    "{}/lib/oltp_insert.lua".format(_LOCAL_APP_PATH)
+                    "{}/lib/oltp_read_write.lua".format(_LOCAL_APP_PATH)
                 )
         elif scenario == "benchmark":
             raise NotImplementedTest(
