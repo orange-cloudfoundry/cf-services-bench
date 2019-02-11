@@ -13,21 +13,26 @@ def get_args():
     """
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("-h",
-                        "host",
+                        "--host",
                         required=True,
                         help="redis hostname")
     parser.add_argument("-p",
-                        "port",
+                        "--port",
                         required=True,
                         help="redis port")
     parser.add_argument("-a",
-                        "password",
+                        "--password",
                         required=True,
                         help="redis password")
     parser.add_argument("-n",
-                        "key_count",
+                        "--key_count",
                         required=True,
                         help="key count")
+
+    parser.add_argument("-c",
+                        "--csv",
+                        action="store_true",
+                        help="Format output in csv")
 
     return parser.parse_args()
 
@@ -35,7 +40,7 @@ def get_args():
 class RedisBenchmark:
     def __init__(self, host, port, password, key_count):
         self.conn = redis.Redis(host=host, port=port, password=password)
-        self.key_count = key_count
+        self.key_count = int(key_count)
         self.key_length = 64
         self.value_length = 1024
         self.ttl = 1

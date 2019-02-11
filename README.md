@@ -37,6 +37,7 @@ Currently implemented scenarios :
 * Fill `APP_REDIS_STORAGE` with redis service you previously created
 * Fill `APP_SERVICES_TO_BENCH` variable with services you wish to bench. If you want to bench multiple services, separate them with a space
 * run `./deploy_on_cf.sh`
+* Optionnal : setting `DONT_USE_REDIS_BENCHMARK` will use a redis-benchmark substitute to avoid firewall issues
 
 # Usage
 
