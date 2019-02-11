@@ -15,7 +15,7 @@ SEPARATOR=#######################################
 
 echo $SEPARATOR
 echo 'downloading packages'
-pip3 download -d app/vendor -r app/requirements.txt
+pip3 download -d app/vendor -r app/requirements.txt --no-binary=:all:
 
 echo $SEPARATOR
 echo 'Setting Python version'

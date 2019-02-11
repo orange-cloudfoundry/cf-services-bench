@@ -2,4 +2,3 @@ flask
 celery
 redis
 sh
-pendulum
