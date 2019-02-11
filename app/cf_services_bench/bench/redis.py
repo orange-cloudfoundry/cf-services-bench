@@ -39,9 +39,7 @@ class BenchRedis(Bench):
         elif not local and use_redis_benchmark:
             self.cmd = sh.Command("/home/vcap/app/bin/redis-benchmark")
         elif not local and not use_redis_benchmark:
-            self.cmd = sh.Command(
-                "/home/vcap/deps/0/python/bin/python "
-                "/home/vcap/app/bin/redis-bench.py")
+            self.cmd = sh.Command("/home/vcap/deps/0/python/bin/python")
 
         if scenario == "nominal":
             self.options = [
@@ -59,6 +57,8 @@ class BenchRedis(Bench):
             raise NotImplementedTest(
                 "Benchmark is not yet implemented for Redis"
             )
+        if not use_redis_benchmark:
+            self.options.insert(0, "/home/vcap/app/bin/redis-bench.py")
 
     def _format_results(self):
         """
