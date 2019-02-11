@@ -39,7 +39,9 @@ class BenchRedis(Bench):
         elif not local and use_redis_benchmark:
             self.cmd = sh.Command("/home/vcap/app/bin/redis-benchmark")
         elif not local and not use_redis_benchmark:
-            self.cmd = sh.Command("/home/vcap/deps/0/python/bin/python")
+            self.cmd = sh.Command(
+                "/home/vcap/deps/0/python/bin/python "
+                "/home/vcap/app/bin/redis-bench.py")
 
         if scenario == "nominal":
             self.options = [
