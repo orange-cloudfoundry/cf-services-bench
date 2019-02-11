@@ -4,7 +4,8 @@
 
 CF_INSTANCE_MEMORY=128M
 CF_INSTANCES=1
-CF_BUILDPACK=python_buildpack2
+CF_BUILDPACK=python_buildpack
+PYTHON_VERSION=3.6.8
 
 APP_NAME=cf_services_bench
 APP_SCENARIO=nominal
@@ -20,7 +21,7 @@ pip3 download -d app/vendor -r app/requirements.txt --no-binary=:all:
 echo $SEPARATOR
 echo 'Setting Python version'
 cat << EOF > app/runtime.txt
-python-3.6.4
+python-${PYTHON_VERSION}
 EOF
 
 echo $SEPARATOR
