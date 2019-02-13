@@ -5,7 +5,9 @@
 CF_INSTANCE_MEMORY=128M
 CF_INSTANCES=1
 CF_BUILDPACK=python_buildpack
-PYTHON_VERSION=3.6.8
+CF_PYTHON_VERSION=3.6.8
+CF_PYTHON_DOWNLOAD_PACKAGES_LOCALY=0
+
 
 APP_NAME=cf_services_bench
 APP_SCENARIO=nominal
@@ -16,14 +18,16 @@ APP_DONT_USE_REDIS_BENCHMARK=0
 
 SEPARATOR=#######################################
 
-echo $SEPARATOR
-echo 'downloading packages'
-pip3 download -d app/vendor -r app/requirements.txt --no-binary=:all:
+if [ "$CF_PYTHON_DOWNLOAD_PACKAGES_LOCALY" == 1 ];then
+  echo $SEPARATOR
+  echo 'downloading packages'
+  pip3 download -d app/vendor -r app/requirements.txt --no-binary=:all:
+fi
 
 echo $SEPARATOR
 echo 'Setting Python version'
 cat << EOF > app/runtime.txt
-python-${PYTHON_VERSION}
+python-${CF_PYTHON_VERSION}
 EOF
 
 echo $SEPARATOR
