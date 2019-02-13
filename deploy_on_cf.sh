@@ -11,7 +11,9 @@ APP_NAME=cf_services_bench
 APP_SCENARIO=nominal
 APP_REDIS_STORAGE=benchmark-redis-storage
 # APP_SERVICES_TO_BENCH MUST be space separated
-APP_SERVICES_TO_BENCH="benchmark-mariadb-dfy redis-demo2"
+APP_SERVICES_TO_BENCH="mariadb-service redis-service"
+APP_DONT_USE_REDIS_BENCHMARK=0
+
 SEPARATOR=#######################################
 
 echo $SEPARATOR
@@ -70,6 +72,7 @@ env:
   SCENARIO: $APP_SCENARIO
   LD_LIBRARY_PATH: /home/vcap/app/lib/
   LUA_PATH: /home/vcap/app/lib/oltp_common.lua
+$(if [ "$APP_DONT_USE_REDIS_BENCHMARK" == 1 ];then echo "  DONT_USE_REDIS_BENCHMARK: 1";fi)
 services:
   - $APP_REDIS_STORAGE
 $(for service in $(echo $APP_SERVICES_TO_BENCH);do echo "  - $service";done)
