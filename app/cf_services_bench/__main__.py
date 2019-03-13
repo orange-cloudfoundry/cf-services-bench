@@ -19,10 +19,11 @@ def main(config, serve=True):
     def run_bench():
         timestamp = time.time()
         for service in config.services_to_bench:
-            if service in config.compatible_services:
+            if service.lower().startswith(config.compatible_services):
                 for service_instance in config.services_to_bench[service]:
                     bench.delay(
-                        service, service_instance, config.scenario, timestamp
+                        service, service_instance, config.scenario,
+                        timestamp
                     )
         return make_response("OK", 200)
 
