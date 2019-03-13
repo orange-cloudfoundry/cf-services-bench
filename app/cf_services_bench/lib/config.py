@@ -33,23 +33,32 @@ class Config:
             self.services = json.loads(os.environ["VCAP_SERVICES"])
         else:
             raise NoServicesFound("No services are bound to this application")
-        self.compatible_services = ["redis", "mysql", "mariadb"]
+        self.compatible_services = ("redis", "mysql", "mariadb")
         self.scenario = os.environ.get("SCENARIO", False)
-        self.services_to_bench = self._remove_redis_storage_from_services()
         self.redis_key_prefix = "_redis_bench."
+        self.redis_providers = self._get_redis_providers()
+        self.services_to_bench = self._remove_redis_storage_from_services()
+
+    def _get_redis_providers(self):
+        """
+        List all service providers and return only those that starts with redis
+        """
+        return [provider for provider in
+                list(self.services.keys())
+                if provider.lower().startswith('redis')]
 
     def _check_redis_storage(self):
-        """checks that a redis service with name starting with 
+        """checks that a redis service with name starting with
         benchmark-redis-storage exists
 
         Returns:
             [bool] -- [True or False depending on service existance]
         """
-
         try:
-            for service in self.services["redis"]:
-                if service["name"].startswith("benchmark-redis-storage"):
-                    return True
+            for provider in self.redis_providers:
+                for service in self.services[provider]:
+                    if service["name"].startswith("benchmark-redis-storage"):
+                        return True
         except KeyError:
             return False
 
@@ -62,14 +71,15 @@ class Config:
         """
 
         services = deepcopy(self.services)
-        for index, service in enumerate(services["redis"]):
-            if service["name"].startswith("benchmark-redis-storage"):
-                # removing benchmark-redis-storage
-                del (services["redis"][index])
-        if not services["redis"]:
-            # if redis service is empty, remove key
-            services.pop("redis")
-        return services
+        for provider in self.redis_providers:
+            for index, service in enumerate(services[provider]):
+                if service["name"].startswith("benchmark-redis-storage"):
+                    # removing benchmark-redis-storage
+                    del (services[provider][index])
+            if not services[provider]:
+                # if redis service is empty, remove key
+                services.pop(provider)
+            return services
 
     def _check_services_to_bench(self):
         """checks existance of services to bench
@@ -79,10 +89,9 @@ class Config:
         """
 
         for service in self.compatible_services:
-            if not self.services_to_bench.get(service, False):
-                continue
-            return True
-        return False
+            for service_to_bench in self.services_to_bench.keys():
+                if service_to_bench.lower().startswith(service):
+                    return True
 
     def check_config(self):
         """checks that programm has a proper configuration
@@ -118,8 +127,9 @@ class Config:
         """
 
         try:
-            for service in self.services["redis"]:
-                if service["name"].startswith("benchmark-redis-storage"):
-                    return service["credentials"]["uri"]
+            for provider in self.redis_providers:
+                for service in self.services[provider]:
+                    if service["name"].startswith("benchmark-redis-storage"):
+                        return service["credentials"]["uri"]
         except KeyError:
             return False

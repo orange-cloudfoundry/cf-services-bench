@@ -29,9 +29,9 @@ def bench(service, service_instance, scenario, token):
         [None] -- [description]
     """
 
-    if service == "redis":
+    if service.lower().startswith("redis"):
         bench = BenchRedis(service_instance["credentials"]["uri"], scenario)
-    elif service in ["mariadb", "mysql"]:
+    elif service.lower().startswith("mariadb", "mysql"):
         bench = BenchMysql(service_instance["credentials"]["uri"], scenario)
 
     bench.run_bench()
