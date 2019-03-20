@@ -33,7 +33,8 @@ class Config:
             self.services = json.loads(os.environ["VCAP_SERVICES"])
         else:
             raise NoServicesFound("No services are bound to this application")
-        self.compatible_services = ("redis", "mysql", "mariadb")
+        self.compatible_services = (
+            "redis", "mysql", "mariadb", "user-provided")
         self.scenario = os.environ.get("SCENARIO", False)
         self.redis_key_prefix = "_redis_bench."
         self.redis_providers = self._get_redis_providers()
