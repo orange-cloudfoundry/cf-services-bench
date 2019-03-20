@@ -31,8 +31,18 @@ def bench(service, service_instance, scenario, token):
 
     if service.lower().startswith("redis"):
         bench = BenchRedis(service_instance["credentials"]["uri"], scenario)
-    elif service.lower().startswith("mariadb", "mysql"):
+
+    elif service.lower().startswith(("mariadb", "mysql", "xtradb")):
         bench = BenchMysql(service_instance["credentials"]["uri"], scenario)
+
+    elif service.lower().startswith("user-provided"):
+        if service_instance['tags'].lower().startswith((
+                "mariadb", "mysql", "xtradb")):
+            bench = BenchMysql(
+                service_instance["credentials"]["uri"], scenario)
+        elif service_instance['tags'].lower().startswith('redis'):
+            bench = BenchRedis(
+                service_instance["credentials"]["uri"], scenario)
 
     bench.run_bench()
     upsert_result(
