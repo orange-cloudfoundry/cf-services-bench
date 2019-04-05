@@ -34,7 +34,7 @@ class Config:
         else:
             raise NoServicesFound("No services are bound to this application")
         self.compatible_services = (
-            "redis", "mysql", "mariadb", "user-provided")
+            "redis", "mysql", "p-redis", "p-mysql", "p-redis", "p-redis-osb","mariadb", "user-provided")
         self.scenario = os.environ.get("SCENARIO", False)
         self.redis_key_prefix = "_redis_bench."
         self.redis_providers = self._get_redis_providers()
@@ -46,7 +46,7 @@ class Config:
         """
         return [provider for provider in
                 list(self.services.keys())
-                if provider.lower().startswith('redis')]
+                if (provider.lower().startswith('redis') or provider.lower().startswith('p-redis'))]
 
     def _check_redis_storage(self):
         """checks that a redis service with name starting with

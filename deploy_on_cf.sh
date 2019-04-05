@@ -13,7 +13,7 @@ APP_NAME=cf_services_bench
 APP_SCENARIO=nominal
 APP_REDIS_STORAGE=benchmark-redis-storage
 # APP_SERVICES_TO_BENCH MUST be space separated
-APP_SERVICES_TO_BENCH="mariadb-service redis-service"
+APP_SERVICES_TO_BENCH="p-mysql-bench"
 APP_DONT_USE_REDIS_BENCHMARK=0
 
 SEPARATOR=#######################################
