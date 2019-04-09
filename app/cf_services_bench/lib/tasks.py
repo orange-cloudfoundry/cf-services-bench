@@ -14,6 +14,9 @@ config = Config()
 redis_uri = config.get_redis_storage_uri()
 celery = Celery("tasks", broker=redis_uri)
 
+def generate_uri( prefix, password, host, port ):
+    uri = prefix + ':' + password + '@' + host + ':' + port
+    return uri
 
 @celery.task
 def bench(service, service_instance, scenario, token):
@@ -29,8 +32,13 @@ def bench(service, service_instance, scenario, token):
         [None] -- [description]
     """
 
-    if service.lower().startswith("redis", "p-redis"):
+#    if service.lower().startswith("redis", "p-redis"):
+    if service.lower().startswith('redis'):
         bench = BenchRedis(service_instance["credentials"]["uri"], scenario)
+
+    elif service.lower().startswith('p-redis'):
+        uri = generate_uri('redis://', service_instance["credentials"]["password"], service_instance["credentials"]["host"], str(service_instance["credentials"]["port"]))
+        bench = BenchRedis(uri, scenario)
 
     elif service.lower().startswith(("p-mysql")):
 #    elif service.lower().startswith(("mariadb", "mysql", "xtradb", "p-mysql")):

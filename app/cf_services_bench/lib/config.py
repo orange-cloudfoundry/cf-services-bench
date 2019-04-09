@@ -120,6 +120,10 @@ class Config:
         if not self._check_services_to_bench():
             raise MissingService("no services to bench, exiting")
 
+    def _generate_uri( self, prefix, password, host, port ):
+        uri = prefix + ':' + password + '@' + host + ':' + port
+        return uri
+
     def get_redis_storage_uri(self):
         """extracts uri from benchmark-redis-storage
 
@@ -131,6 +135,8 @@ class Config:
             for provider in self.redis_providers:
                 for service in self.services[provider]:
                     if service["name"].startswith("benchmark-redis-storage"):
-                        return service["credentials"]["uri"]
+#                        return service["credentials"]["uri"]
+                        uri = self._generate_uri('redis://', service["credentials"]["password"], service["credentials"]["host"], str(service["credentials"]["port"]))
+                        return uri
         except KeyError:
             return False
